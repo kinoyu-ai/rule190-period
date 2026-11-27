@@ -1,0 +1,26 @@
+name: Lean 4 Verify
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install elan
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Build Lean 4 proof
+        run: lake build
+
+      - name: Check axioms and absence of sorry
+        run: |
+          ! grep -En '\b(sorry|axiom)\b' Rule190.lean
+          lake env lean AxiomCheck.lean

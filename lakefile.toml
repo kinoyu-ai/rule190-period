@@ -1,0 +1,6 @@
+name = "rule190-period"
+version = "0.1.0"
+defaultTargets = ["Rule190"]
+
+[[lean_lib]]
+name = "Rule190"
